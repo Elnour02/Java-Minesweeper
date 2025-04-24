@@ -38,10 +38,11 @@ public class MainFrame {
     }
 
     public void boardInput(int row, int col) {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         gameLogic.boardInput(row, col);
-        long endTime = System.currentTimeMillis();
-        System.out.println("Total time: " + (endTime - startTime) + " ms");
+        long endTime = System.nanoTime();
+        System.out.println("Total time: " + ((endTime - startTime)/1000) + " \u00B5s");
+
     }
 
     public void revealTile(int row, int col, String appearance) {

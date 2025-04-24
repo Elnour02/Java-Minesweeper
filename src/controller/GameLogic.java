@@ -184,12 +184,22 @@ public class GameLogic {
     }
 
     public void updateTime(int seconds) {
-        if (seconds == 60) {
+        if ((seconds == 60) && (minutes >= 10)) {
+            minutes++;
+            gui.updateTime(minutes + ":00");
+        }
+        else if (seconds == 60) {
             minutes++;
             gui.updateTime("0" + minutes + ":00");
         }
+        else if ((seconds >= 10) && (minutes >= 10)) {
+            gui.updateTime(minutes + ":" + seconds);
+        }
         else if (seconds >= 10) {
             gui.updateTime("0" + minutes + ":" + seconds);
+        }
+        else if ((seconds < 10) && (minutes >= 10)) {
+            gui.updateTime(minutes + ":0" + seconds);
         }
         else if (seconds < 10) {
             gui.updateTime("0" + minutes + ":0" + seconds);

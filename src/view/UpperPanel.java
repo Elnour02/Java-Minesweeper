@@ -4,10 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class UpperPanel {
 
     private MainFrame mainFrame;
+    private Font customFont;
+    private ImageIcon smiley;
     private JPanel upperPanel;
     private JLabel mineLabel;
     private JLabel timeLabel;
@@ -17,6 +20,8 @@ public class UpperPanel {
     
     public UpperPanel(MainFrame mainFrame, JFrame frame) {
         this.mainFrame = mainFrame;
+        createFonts();
+        createImages();
         createUpperPanel();
         createLabels();
         createButtons();
@@ -26,6 +31,24 @@ public class UpperPanel {
         upperPanel.add(timeLabel);
         upperPanel.add(emptyLeftButton);
         frame.add(upperPanel, BorderLayout.NORTH);
+    }
+
+    private void createFonts() {
+        try {
+            File fontFile = new File(new File("resources","fonts/digital-7.ttf").getPath());
+            customFont = Font.createFont(0, fontFile).deriveFont(50f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } 
+        catch (IOException | FontFormatException e) {
+            System.out.println("Font error");
+        }
+    }
+
+    private void createImages() {
+        smiley = new ImageIcon(Paths.get("resources", "images", "smiley.png").toString());
+        Image newImage = smiley.getImage().getScaledInstance(35, 35, 4);
+        smiley = new ImageIcon(newImage);
     }
 
     private void createUpperPanel() {
@@ -47,21 +70,11 @@ public class UpperPanel {
         timeLabel.setBackground(new Color(33, 33, 33));
         timeLabel.setOpaque(true);
         timeLabel.setHorizontalAlignment(JLabel.CENTER);
-        try {
-            File fontFile = new File("resources\\fonts\\digital-7.ttf");
-            Font customFont = Font.createFont(0, fontFile).deriveFont(55f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            timeLabel.setFont(customFont);
-            mineLabel.setFont(customFont);;
-        } 
-        catch (IOException | FontFormatException e) {}
+        timeLabel.setFont(customFont);
+        mineLabel.setFont(customFont);
     }
 
     private void createButtons() {
-        ImageIcon smiley = new ImageIcon("resources\\images\\smiley.png");
-        Image newImage = smiley.getImage().getScaledInstance(35, 35, 4);
-        smiley = new ImageIcon(newImage);
         newGameButton = new JButton(smiley);
         newGameButton.setBackground(Color.gray);
         newGameButton.setBorder(BorderFactory.createBevelBorder(0));
@@ -78,7 +91,12 @@ public class UpperPanel {
     }
 
     public void displayNumOfMines(int numOfMines) {
-        mineLabel.setText("00" + String.valueOf(numOfMines));
+        if (numOfMines >= 10) {
+            mineLabel.setText("00" + String.valueOf(numOfMines));
+        }
+        else {
+            mineLabel.setText("000" + String.valueOf(numOfMines));
+        }
     }
 
     public void updateTime(String time) {

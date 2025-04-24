@@ -5,19 +5,46 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class BoardPanel {
     
     private MainFrame mainFrame;
+    private Font customFont;
+    private ImageIcon mine;
+    private ImageIcon flag;
     private JPanel boardPanel;
     private JPanel centerBoardPanel;
     private JButton[][] buttons;
 
     public BoardPanel(MainFrame mainFrame, JFrame frame) {
         this.mainFrame = mainFrame;
+        createFonts();
+        createImages();
         createBoardPanel();
         createBoard();
         frame.add(boardPanel, BorderLayout.CENTER);
+    }
+
+    private void createFonts() {
+        try {
+            File fontFile = new File(new File("resources", "fonts/mine-sweeper.ttf").getPath());
+            customFont = Font.createFont(0, fontFile).deriveFont(22f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } 
+        catch (IOException | FontFormatException e) {
+            System.out.println("Font error");
+        }
+    }
+
+    private void createImages() {
+        mine = new ImageIcon(Paths.get("resources", "images", "mine.png").toString());
+        Image newImage = mine.getImage().getScaledInstance(32, 32, 4);
+        mine = new ImageIcon(newImage);
+        flag = new ImageIcon(Paths.get("resources", "images", "flag.png").toString());
+        Image newImage2 = flag.getImage().getScaledInstance(30, 30, 4);
+        flag = new ImageIcon(newImage2);
     }
 
     private void createBoardPanel() {
@@ -112,16 +139,7 @@ public class BoardPanel {
     }
 
     public void revealTile(int row, int col, String appearance) {
-        try {
-            File fontFile = new File("resources\\fonts\\mine-sweeper.ttf");
-            Font customFont = Font.createFont(0, fontFile).deriveFont(22f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            buttons[row][col].setFont(customFont);
-        } 
-        catch (IOException | FontFormatException e) {
-            System.out.println("Font error");
-        }
+        buttons[row][col].setFont(customFont);
         buttons[row][col].setText(appearance);
         if (!appearance.equals("")) {
             setTileForeground(row, col, Integer.valueOf(appearance));
@@ -133,24 +151,18 @@ public class BoardPanel {
     }
 
     public void revealMine(int row, int col, boolean clickedOn) {
-        ImageIcon mine = new ImageIcon("resources\\images\\mine.png");
-        Image newImage = mine.getImage().getScaledInstance(32, 32, 4);
         if (clickedOn) {
             buttons[row][col].setBackground(Color.red);
         }
         else {
             buttons[row][col].setBackground(new Color(87, 87, 87));
         }
-        mine = new ImageIcon(newImage);
         buttons[row][col].setIcon(mine);
         buttons[row][col].setBorder(BorderFactory.createBevelBorder(1));
         buttons[row][col].setModel(new CustomButton());
     }
 
     public void setFlag(int row, int col) {
-        ImageIcon flag = new ImageIcon("resources\\images\\flag.png");
-        Image newImage = flag.getImage().getScaledInstance(30, 30, 4);
-        flag = new ImageIcon(newImage);
         buttons[row][col].setIcon(flag);
         buttons[row][col].setContentAreaFilled(false);
     }
