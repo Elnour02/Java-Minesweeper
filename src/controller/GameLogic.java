@@ -184,7 +184,7 @@ public class GameLogic {
     }
 
     public void updateTime(int seconds) {
-        if ((seconds == 60) && (minutes >= 10)) {
+        if ((seconds == 60) && (minutes >= 9)) {
             minutes++;
             gui.updateTime(minutes + ":00");
         }

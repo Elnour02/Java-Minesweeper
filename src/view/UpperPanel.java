@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 public class UpperPanel {
 
     private MainFrame mainFrame;
+    private int screenWidth;
+    private int screenHeight;
     private Font customFont;
     private ImageIcon smiley;
     private JPanel upperPanel;
@@ -18,8 +20,10 @@ public class UpperPanel {
     private JButton emptyLeftButton;
     private JButton newGameButton;
     
-    public UpperPanel(MainFrame mainFrame, JFrame frame) {
+    public UpperPanel(MainFrame mainFrame, JFrame frame, int width, int height) {
         this.mainFrame = mainFrame;
+        this.screenWidth = width;
+        this.screenHeight = height;
         createFonts();
         createImages();
         createUpperPanel();
@@ -36,7 +40,7 @@ public class UpperPanel {
     private void createFonts() {
         try {
             File fontFile = new File(new File("resources","fonts/digital-7.ttf").getPath());
-            customFont = Font.createFont(0, fontFile).deriveFont(50f);
+            customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/28.8));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
         } 
@@ -47,7 +51,7 @@ public class UpperPanel {
 
     private void createImages() {
         smiley = new ImageIcon(Paths.get("resources", "images", "smiley.png").toString());
-        Image newImage = smiley.getImage().getScaledInstance(35, 35, 4);
+        Image newImage = smiley.getImage().getScaledInstance((int)(screenWidth/64), (int)(screenHeight/36), 4);
         smiley = new ImageIcon(newImage);
     }
 
@@ -55,7 +59,7 @@ public class UpperPanel {
         upperPanel = new JPanel();
         upperPanel.setBackground(Color.gray);
         upperPanel.setLayout(new GridLayout());
-        upperPanel.setPreferredSize(new Dimension(600, 50));
+        upperPanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/20.571)));
     }
 
     private void createLabels() {

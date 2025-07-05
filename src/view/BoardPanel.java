@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 public class BoardPanel {
     
     private MainFrame mainFrame;
+    private int screenWidth;
+    private int screenHeight;
     private Font customFont;
     private ImageIcon mine;
     private ImageIcon flag;
@@ -17,8 +19,10 @@ public class BoardPanel {
     private JPanel centerBoardPanel;
     private JButton[][] buttons;
 
-    public BoardPanel(MainFrame mainFrame, JFrame frame) {
+    public BoardPanel(MainFrame mainFrame, JFrame frame, int width, int height) {
         this.mainFrame = mainFrame;
+        this.screenWidth = width;
+        this.screenHeight = height;
         createFonts();
         createImages();
         createBoardPanel();
@@ -29,7 +33,7 @@ public class BoardPanel {
     private void createFonts() {
         try {
             File fontFile = new File(new File("resources", "fonts/mine-sweeper.ttf").getPath());
-            customFont = Font.createFont(0, fontFile).deriveFont(22f);
+            customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/65.454));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
         } 
@@ -40,21 +44,37 @@ public class BoardPanel {
 
     private void createImages() {
         mine = new ImageIcon(Paths.get("resources", "images", "mine.png").toString());
-        Image newImage = mine.getImage().getScaledInstance(32, 32, 4);
+        Image newImage = mine.getImage().getScaledInstance((int)(screenWidth/82), (int)(screenHeight/45), 4);
         mine = new ImageIcon(newImage);
         flag = new ImageIcon(Paths.get("resources", "images", "flag.png").toString());
-        Image newImage2 = flag.getImage().getScaledInstance(30, 30, 4);
+        Image newImage2 = flag.getImage().getScaledInstance((int)(screenWidth/91.428), (int)(screenHeight/51.428), 4);
         flag = new ImageIcon(newImage2);
+    }
+
+    private int closestFittingWidth() {
+        int calculatedWidth = (int)(screenWidth/4.491);
+        int remainder = calculatedWidth % 16;
+        if (remainder == 0) return calculatedWidth;
+        return calculatedWidth + (16 - remainder);
+    }
+
+    private int closestFittingHeight() {
+        int calculatedHeight = (int)(screenHeight/2.322);
+        int remainder = calculatedHeight % 16;
+        if (remainder == 0) return calculatedHeight;
+        return calculatedHeight + (16 - remainder);
     }
 
     private void createBoardPanel() {
         boardPanel = new JPanel();
         boardPanel.setLayout(new BorderLayout());
-        boardPanel.setPreferredSize(new Dimension(600, 633));
         boardPanel.setBackground(Color.gray);
         centerBoardPanel = new JPanel();
         centerBoardPanel.setLayout(new GridLayout(16, 16));
-        centerBoardPanel.setPreferredSize(new Dimension(570, 620));
+        int width = closestFittingWidth();
+        int height = closestFittingHeight();
+        centerBoardPanel.setPreferredSize(new Dimension(width, height)); 
+        boardPanel.setPreferredSize(new Dimension(width + (int)(screenWidth/170.666)*2, height + (int)(screenHeight/96)*2));
         centerBoardPanel.setBackground(Color.gray);
         boardPanel.add(centerBoardPanel, BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
@@ -66,19 +86,19 @@ public class BoardPanel {
             button.setBorder(BorderFactory.createBevelBorder(0));
             button.setEnabled(false);
             if (i == 0) {
-                sidePanel.setPreferredSize(new Dimension(20, 640));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/170.666), (int)(screenHeight/2.215)));
                 boardPanel.add(sidePanel, BorderLayout.WEST);
             }
             else if (i == 1) {
-                sidePanel.setPreferredSize(new Dimension(600, 20));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/96)));
                 boardPanel.add(sidePanel, BorderLayout.SOUTH);
             }
             else if (i == 2) {
-                sidePanel.setPreferredSize(new Dimension(600, 20));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/96)));
                 boardPanel.add(sidePanel, BorderLayout.NORTH);
             }
             else {
-                sidePanel.setPreferredSize(new Dimension(20, 640));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/170.666), (int)(screenHeight/2.215)));
                 boardPanel.add(sidePanel, BorderLayout.EAST);
             }
             sidePanel.add(button);
