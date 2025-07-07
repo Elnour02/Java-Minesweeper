@@ -5,6 +5,7 @@ import java.util.Random;
 import model.Board;
 import model.Tile;
 import model.Mine;
+import model.Timer;
 import view.MainFrame;
 
 public class GameLogic {

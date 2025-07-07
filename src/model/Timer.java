@@ -1,4 +1,6 @@
-package controller;
+package model;
+
+import controller.GameLogic;
 
 public class Timer extends Thread {
 
