@@ -39,7 +39,7 @@ public class UpperPanel {
 
     private void createFonts() {
         try {
-            File fontFile = new File(new File("resources","fonts/digital-7.ttf").getPath());
+            File fontFile = new File("resources","fonts/digital-7.ttf");
             customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/28.8));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);

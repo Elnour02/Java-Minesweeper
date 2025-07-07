@@ -32,7 +32,7 @@ public class BoardPanel {
 
     private void createFonts() {
         try {
-            File fontFile = new File(new File("resources", "fonts/mine-sweeper.ttf").getPath());
+            File fontFile = new File("resources", "fonts/mine-sweeper.ttf");
             customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/65.454));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
