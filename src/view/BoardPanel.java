@@ -12,6 +12,8 @@ public class BoardPanel {
     private MainFrame mainFrame;
     private int screenWidth;
     private int screenHeight;
+    private int boardWidth;
+    private int boardHeight;
     private Font customFont;
     private ImageIcon mine;
     private ImageIcon flag;
@@ -19,21 +21,21 @@ public class BoardPanel {
     private JPanel centerBoardPanel;
     private JButton[][] buttons;
 
-    public BoardPanel(MainFrame mainFrame, JFrame frame, int width, int height) {
+    public BoardPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenheight) {
         this.mainFrame = mainFrame;
-        this.screenWidth = width;
-        this.screenHeight = height;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenheight;
         createFonts();
         createImages();
         createBoardPanel();
         createBoard();
-        frame.add(boardPanel, BorderLayout.CENTER);
+        centerPanel.add(boardPanel);
     }
 
     private void createFonts() {
         try {
             File fontFile = new File("resources", "fonts/mine-sweeper.ttf");
-            customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/65.454));
+            customFont = Font.createFont(0, fontFile).deriveFont((float)(screenHeight/62.608));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
         } 
@@ -44,7 +46,7 @@ public class BoardPanel {
 
     private void createImages() {
         mine = new ImageIcon(Paths.get("resources", "images", "mine.png").toString());
-        Image newImage = mine.getImage().getScaledInstance((int)(screenWidth/82), (int)(screenHeight/45), 4);
+        Image newImage = mine.getImage().getScaledInstance((int)(screenWidth/80), (int)(screenHeight/45), 4);
         mine = new ImageIcon(newImage);
         flag = new ImageIcon(Paths.get("resources", "images", "flag.png").toString());
         Image newImage2 = flag.getImage().getScaledInstance((int)(screenWidth/91.428), (int)(screenHeight/51.428), 4);
@@ -55,7 +57,11 @@ public class BoardPanel {
         int calculatedWidth = (int)(screenWidth/4.491);
         int remainder = calculatedWidth % 16;
         if (remainder == 0) return calculatedWidth;
-        return calculatedWidth + (16 - remainder);
+        calculatedWidth = calculatedWidth + (16 - remainder);
+        while ((calculatedWidth + (int)(screenWidth/128)*2) % 5 != 0) {
+            calculatedWidth += 16;
+        }
+        return calculatedWidth;
     }
 
     private int closestFittingHeight() {
@@ -71,10 +77,10 @@ public class BoardPanel {
         boardPanel.setBackground(Color.gray);
         centerBoardPanel = new JPanel();
         centerBoardPanel.setLayout(new GridLayout(16, 16));
-        int width = closestFittingWidth();
-        int height = closestFittingHeight();
-        centerBoardPanel.setPreferredSize(new Dimension(width, height)); 
-        boardPanel.setPreferredSize(new Dimension(width + (int)(screenWidth/170.666)*2, height + (int)(screenHeight/96)*2));
+        boardWidth = closestFittingWidth();
+        boardHeight = closestFittingHeight();
+        centerBoardPanel.setPreferredSize(new Dimension(boardWidth, boardHeight));
+        boardPanel.setPreferredSize(new Dimension(boardWidth + (int)(screenWidth/128)*2, boardHeight + (int)(screenHeight/72)*2));
         centerBoardPanel.setBackground(Color.gray);
         boardPanel.add(centerBoardPanel, BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
@@ -86,19 +92,19 @@ public class BoardPanel {
             button.setBorder(BorderFactory.createBevelBorder(0));
             button.setEnabled(false);
             if (i == 0) {
-                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/170.666), (int)(screenHeight/2.215)));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/128), (int)(screenHeight/2.215)));
                 boardPanel.add(sidePanel, BorderLayout.WEST);
             }
             else if (i == 1) {
-                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/96)));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/72)));
                 boardPanel.add(sidePanel, BorderLayout.SOUTH);
             }
             else if (i == 2) {
-                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/96)));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/72)));
                 boardPanel.add(sidePanel, BorderLayout.NORTH);
             }
             else {
-                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/170.666), (int)(screenHeight/2.215)));
+                sidePanel.setPreferredSize(new Dimension((int)(screenWidth/128), (int)(screenHeight/2.215)));
                 boardPanel.add(sidePanel, BorderLayout.EAST);
             }
             sidePanel.add(button);
@@ -122,7 +128,7 @@ public class BoardPanel {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON3) {
-                            mainFrame.validateFlag(row, col);
+                            mainFrame.toggleFlag(row, col);
                         }
                     }
                 });
@@ -217,7 +223,6 @@ public class BoardPanel {
                 for (ActionListener actionListener : buttons[row][col].getActionListeners()) {
                     buttons[row][col].removeActionListener(actionListener);
                 }
-                buttons[row][col].removeActionListener(null);
                 buttons[row][col].setModel(new CustomButton());
             }
         }
@@ -228,6 +233,14 @@ public class BoardPanel {
             return true;
         }
         return false;
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
     }
 
 }
