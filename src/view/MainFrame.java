@@ -13,6 +13,8 @@ public class MainFrame {
     private JFrame frame;
     private UpperPanel upperPanel;
     private BoardPanel boardPanel;
+    private StatsPanel statsPanel;
+    private JPanel centerPanel;
 
     public MainFrame(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
@@ -24,8 +26,11 @@ public class MainFrame {
 
     private void createGUI() {
         createFrame();
+        centerPanel = new JPanel(new CardLayout());
+        boardPanel = new BoardPanel(this, centerPanel, screenWidth, screenHeight);
         upperPanel = new UpperPanel(this, frame, screenWidth, screenHeight);
-        boardPanel = new BoardPanel(this, frame, screenWidth, screenHeight);
+        statsPanel = new StatsPanel(this, centerPanel, screenWidth, screenHeight);
+        frame.add(centerPanel, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
     }
@@ -40,6 +45,10 @@ public class MainFrame {
 
     public void startGame() {
         gameLogic.startGame();
+    }
+
+    public void restartGame() {
+        gameLogic.restartGame();
     }
 
     public void boardInput(int row, int col) {
@@ -65,8 +74,8 @@ public class MainFrame {
         boardPanel.resetBoard();
     }
 
-    public void validateFlag(int row, int col) {
-        gameLogic.validateFlag(row, col);
+    public void toggleFlag(int row, int col) {
+        gameLogic.toggleFlag(row, col);
     }
 
     public void setFlag(int row, int col) {
@@ -81,12 +90,42 @@ public class MainFrame {
         return boardPanel.getButtonStatus(row, col);
     }
 
-    public void displayNumOfMines(int numOfMines) {
-        upperPanel.displayNumOfMines(numOfMines);
+    public void updateNumOfMines(int numOfMines) {
+        upperPanel.updateNumOfMines(numOfMines);
     } 
 
     public void updateTime(String time) {
         upperPanel.updateTime(time);
+    }
+
+    public int getBoardWidth() {
+        return boardPanel.getBoardWidth();
+    }
+
+    public int getBoardHeight() {
+        return boardPanel.getBoardHeight();
+    }
+
+    public void showNextPanel() {
+        gameLogic.updateStats();
+        CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
+        cardLayout.next(centerPanel);
+    }
+
+    public void updateGamesPlayed(int gamesPlayed) {
+        statsPanel.updateGamesPlayed(gamesPlayed);
+    }
+
+    public void updateGamesWon(int gamesWon) {
+        statsPanel.updateGamesWon(gamesWon);
+    }
+
+    public void updateWinRatio(int winRatio) {
+        statsPanel.updateWinRatio(winRatio);
+    }
+
+    public void updateBestTime(int bestTimeMinutes, int bestTimeSeconds) {
+        statsPanel.updateBestTime(bestTimeMinutes, bestTimeSeconds);
     }
 
 }

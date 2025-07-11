@@ -13,27 +13,28 @@ public class UpperPanel {
     private int screenHeight;
     private Font customFont;
     private ImageIcon smiley;
+    private ImageIcon settings;
     private JPanel upperPanel;
     private JLabel mineLabel;
     private JLabel timeLabel;
-    private JButton emptyRightButton;
+    private JButton settingsButton;
     private JButton emptyLeftButton;
     private JButton newGameButton;
     
-    public UpperPanel(MainFrame mainFrame, JFrame frame, int width, int height) {
+    public UpperPanel(MainFrame mainFrame, JFrame frame, int screenWidth, int screenHeight) {
         this.mainFrame = mainFrame;
-        this.screenWidth = width;
-        this.screenHeight = height;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         createFonts();
         createImages();
         createUpperPanel();
         createLabels();
         createButtons();
-        upperPanel.add(emptyRightButton);
+        upperPanel.add(emptyLeftButton);
         upperPanel.add(mineLabel);
         upperPanel.add(newGameButton);
         upperPanel.add(timeLabel);
-        upperPanel.add(emptyLeftButton);
+        upperPanel.add(settingsButton);
         frame.add(upperPanel, BorderLayout.NORTH);
     }
 
@@ -53,13 +54,16 @@ public class UpperPanel {
         smiley = new ImageIcon(Paths.get("resources", "images", "smiley.png").toString());
         Image newImage = smiley.getImage().getScaledInstance((int)(screenWidth/64), (int)(screenHeight/36), 4);
         smiley = new ImageIcon(newImage);
+        settings = new ImageIcon(Paths.get("resources", "images", "settings.png").toString());
+        Image newImage2 = settings.getImage().getScaledInstance((int)(screenWidth/73.142), (int)(screenHeight/41.142), 4);
+        settings = new ImageIcon(newImage2);
     }
 
     private void createUpperPanel() {
         upperPanel = new JPanel();
         upperPanel.setBackground(Color.gray);
         upperPanel.setLayout(new GridLayout());
-        upperPanel.setPreferredSize(new Dimension((int)(screenWidth/4.266), (int)(screenHeight/20.571)));
+        upperPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth() + (int)(screenWidth/170.666)*2, (int)(screenHeight/20.571)));
     }
 
     private void createLabels() {
@@ -83,18 +87,19 @@ public class UpperPanel {
         newGameButton.setBackground(Color.gray);
         newGameButton.setBorder(BorderFactory.createBevelBorder(0));
         newGameButton.setFocusPainted(false);
-        newGameButton.addActionListener(e -> mainFrame.startGame());
+        newGameButton.addActionListener(e -> mainFrame.restartGame());
         emptyLeftButton = new JButton();
         emptyLeftButton.setBackground(Color.gray);
         emptyLeftButton.setBorder(BorderFactory.createBevelBorder(0));
         emptyLeftButton.setEnabled(false);
-        emptyRightButton = new JButton();
-        emptyRightButton.setBackground(Color.gray);
-        emptyRightButton.setBorder(BorderFactory.createBevelBorder(0));
-        emptyRightButton.setEnabled(false);
+        settingsButton = new JButton(settings);
+        settingsButton.setBackground(Color.gray);
+        settingsButton.setBorder(BorderFactory.createBevelBorder(0));
+        settingsButton.setFocusPainted(false);
+        settingsButton.addActionListener(e -> mainFrame.showNextPanel());
     }
 
-    public void displayNumOfMines(int numOfMines) {
+    public void updateNumOfMines(int numOfMines) {
         if (numOfMines >= 10) {
             mineLabel.setText("00" + String.valueOf(numOfMines));
         }

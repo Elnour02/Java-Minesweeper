@@ -6,6 +6,7 @@ import model.Board;
 import model.Tile;
 import model.Mine;
 import model.Timer;
+import model.User;
 import view.MainFrame;
 
 public class GameLogic {
@@ -16,7 +17,9 @@ public class GameLogic {
     private Random random;
     private int clicked;
     private int minutes;
+    private int seconds;
     private Timer timer;
+    private User user;
 
     public GameLogic() {
         random = new Random();
@@ -83,8 +86,12 @@ public class GameLogic {
         if (mines > 0) {
             gui.revealTile(row, col, String.valueOf(mines));
             if (gameFinished()) {
-                gui.freezeBoard();
                 timer.interrupt();
+                gui.freezeBoard();
+                user.increaseGamesPlayed();
+                user.increaseGamesWon();
+                user.updateWinRatio();
+                user.updateBestTime(minutes, seconds);
             }
         } 
         else {
@@ -140,7 +147,20 @@ public class GameLogic {
         gui.updateTime("00:00");
         gui.resetBoard();
         createBoard();
-        gui.displayNumOfMines(numOfMines);
+        gui.updateNumOfMines(numOfMines);
+        user = new User("Hello", 1234);
+    }
+
+    public void restartGame() {
+        clicked = 0;
+        minutes = 0;
+        if (timer != null) {
+            timer.interrupt();
+        }
+        gui.updateTime("00:00");
+        gui.resetBoard();
+        createBoard();
+        gui.updateNumOfMines(numOfMines);
     }
     
     public void boardInput(int row, int col) {
@@ -157,9 +177,11 @@ public class GameLogic {
             }
             else if (board[row][col] instanceof Mine) {
                 timer.interrupt();
+                gui.freezeBoard();
                 gui.revealMine(row, col, true);
                 revealMines(row, col);
-                gui.freezeBoard();
+                user.increaseGamesPlayed();
+                user.updateWinRatio();
             }
             else {
                 checkSurrounding(row, col);
@@ -167,19 +189,19 @@ public class GameLogic {
         }
     }
     
-    public void validateFlag(int row, int col) {
+    public void toggleFlag(int row, int col) {
         if (gui.getButtonStatus(row, col) == true) {
             if (board[row][col].getFlag() == false) {
                 board[row][col].setFlag(true);
                 gui.setFlag(row, col);
                 numOfMines--;
-                gui.displayNumOfMines(numOfMines);
+                gui.updateNumOfMines(numOfMines);
             }
             else {
                 board[row][col].setFlag(false);
                 gui.removeFlag(row, col);
                 numOfMines++;
-                gui.displayNumOfMines(numOfMines);
+                gui.updateNumOfMines(numOfMines);
             }
         }
     }
@@ -205,6 +227,14 @@ public class GameLogic {
         else if (seconds < 10) {
             gui.updateTime("0" + minutes + ":0" + seconds);
         }
+        this.seconds = seconds;
+    }
+
+    public void updateStats() {
+        gui.updateGamesPlayed(user.getGamesPlayed());
+        gui.updateGamesWon(user.getGamesWon());
+        gui.updateWinRatio(user.getWinRatio());
+        gui.updateBestTime(user.getBestTimeMinutes(), user.getBestTimeSeconds());
     }
     
 }

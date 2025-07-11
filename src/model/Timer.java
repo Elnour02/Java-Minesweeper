@@ -19,7 +19,8 @@ public class Timer extends Thread {
                 seconds = (seconds % 60) + 1;
                 Thread.sleep(1000);
                 gameLogic.updateTime(seconds);
-            } catch (InterruptedException e) {
+            } 
+            catch (InterruptedException e) {
                 break;
             }
         }
