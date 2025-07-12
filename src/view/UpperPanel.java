@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -96,7 +97,7 @@ public class UpperPanel {
         settingsButton.setBackground(Color.gray);
         settingsButton.setBorder(BorderFactory.createBevelBorder(0));
         settingsButton.setFocusPainted(false);
-        settingsButton.addActionListener(e -> mainFrame.showNextPanel());
+        settingsButton.addActionListener(e -> mainFrame.showSettingsPanel());
     }
 
     public void updateNumOfMines(int numOfMines) {
@@ -110,6 +111,32 @@ public class UpperPanel {
 
     public void updateTime(String time) {
         timeLabel.setText(time);
+    }
+
+    public void disableButtons() {
+        newGameButton.setBorder(BorderFactory.createBevelBorder(1));
+        for (ActionListener actionListener : newGameButton.getActionListeners()) {
+            newGameButton.removeActionListener(actionListener);
+        }
+        newGameButton.setBackground(new Color(110, 110, 110));
+        newGameButton.setModel(new CustomButton());
+        settingsButton.setBorder(BorderFactory.createBevelBorder(1));
+        for (ActionListener actionListener : settingsButton.getActionListeners()) {
+            settingsButton.removeActionListener(actionListener);
+        }
+        settingsButton.setBackground(new Color(110, 110, 110));
+        settingsButton.setModel(new CustomButton());
+    }
+
+    public void enableButtons() {
+        newGameButton.setBorder(BorderFactory.createBevelBorder(0));
+        newGameButton.setBackground(Color.gray);
+        newGameButton.setModel(new DefaultButtonModel());
+        newGameButton.addActionListener(e -> mainFrame.restartGame());
+        settingsButton.setBorder(BorderFactory.createBevelBorder(0));
+        settingsButton.setBackground(Color.gray);
+        settingsButton.setModel(new DefaultButtonModel());
+        settingsButton.addActionListener(e -> mainFrame.showSettingsPanel());
     }
 
 }

@@ -123,6 +123,7 @@ public class StatsPanel {
         backButton.setBorder(BorderFactory.createBevelBorder(0));
         backButton.setFocusPainted(false);
         backButton.setBounds(mainFrame.getBoardWidth()/2 - ((int)(screenWidth/17.066))/2, (int)(screenHeight/2.823), (int)(screenWidth/17.066), (int)(screenHeight/19.2));
+        backButton.addActionListener(e -> mainFrame.reShowSettingsPanel());
     }
 
     public void updateGamesPlayed(int gamesPlayed) {

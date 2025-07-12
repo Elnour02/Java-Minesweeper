@@ -13,6 +13,7 @@ public class MainFrame {
     private JFrame frame;
     private UpperPanel upperPanel;
     private BoardPanel boardPanel;
+    private SettingsPanel settingsPanel;
     private StatsPanel statsPanel;
     private JPanel centerPanel;
 
@@ -29,6 +30,7 @@ public class MainFrame {
         centerPanel = new JPanel(new CardLayout());
         boardPanel = new BoardPanel(this, centerPanel, screenWidth, screenHeight);
         upperPanel = new UpperPanel(this, frame, screenWidth, screenHeight);
+        settingsPanel = new SettingsPanel(this, centerPanel, screenWidth, screenHeight);
         statsPanel = new StatsPanel(this, centerPanel, screenWidth, screenHeight);
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.pack();
@@ -106,10 +108,27 @@ public class MainFrame {
         return boardPanel.getBoardHeight();
     }
 
-    public void showNextPanel() {
+    public void showSettingsPanel() {
+        CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
+        cardLayout.next(centerPanel);
+        upperPanel.disableButtons();
+    }
+
+    public void showBoardPanel() {
+        CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
+        cardLayout.previous(centerPanel);
+        upperPanel.enableButtons();
+    }
+
+    public void showStatsPanel() {
         gameLogic.updateStats();
         CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
         cardLayout.next(centerPanel);
+    }
+
+    public void reShowSettingsPanel() {
+        CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
+        cardLayout.previous(centerPanel);
     }
 
     public void updateGamesPlayed(int gamesPlayed) {
