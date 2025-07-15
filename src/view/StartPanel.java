@@ -140,6 +140,7 @@ public class StartPanel {
         loginButton.setBounds((int)(screenWidth/51.2), (int)(screenHeight/3.84), (int)(screenWidth/10.24), (int)(screenHeight/28.8));
         loginButton.setFont(customFontM);
         loginButton.setForeground(Color.black);
+        loginButton.addActionListener(e -> mainFrame.login(nameField.getText(), passwordField.getText()));
         registerButton = new JButton("Register");
         registerButton.setBackground(Color.gray);
         registerButton.setBorder(BorderFactory.createBevelBorder(0));

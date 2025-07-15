@@ -129,7 +129,7 @@ public class UpperPanel {
         newGameButton.setBorder(BorderFactory.createBevelBorder(0));
         newGameButton.setBackground(Color.gray);
         newGameButton.setModel(new DefaultButtonModel());
-        newGameButton.addActionListener(e -> mainFrame.startGame());
+        newGameButton.addActionListener(e -> mainFrame.restartgame());
         settingsButton.setBorder(BorderFactory.createBevelBorder(0));
         settingsButton.setBackground(Color.gray);
         settingsButton.setModel(new DefaultButtonModel());

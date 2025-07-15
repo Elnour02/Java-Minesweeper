@@ -1,8 +1,11 @@
 package controller;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Random;
 
 import model.Board;
+import model.DataHandler;
 import model.Tile;
 import model.Mine;
 import model.Timer;
@@ -19,11 +22,14 @@ public class GameLogic {
     private int minutes;
     private int seconds;
     private Timer timer;
+    private DataHandler dataHandler;
+    private HashMap<String, User> userList;
     private User user;
 
     public GameLogic() {
         random = new Random();
         gui = new MainFrame(this);
+        dataHandler = new DataHandler();
     }
 
     private void createBoard() {
@@ -138,7 +144,15 @@ public class GameLogic {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void startGame() {
+        restartGame();
+        File dataFile = new File("resources", "data/data.txt");
+        if (!dataFile.isFile()) userList = new HashMap<>();
+        else userList = (HashMap<String, User>)dataHandler.readData();
+    }
+
+    public void restartGame() {
         clicked = 0;
         minutes = 0;
         if (timer != null) {
@@ -150,13 +164,34 @@ public class GameLogic {
         gui.updateNumOfMines(numOfMines);
     }
 
+    public void saveData() {
+        if (user != null) {
+            if (userList.containsKey(user.getName())) userList.replace(user.getName(), userList.get(user.getName()), user);
+            else userList.put(user.getName(), user);
+        }
+        if (userList.size() != 0) dataHandler.writeData(userList);
+    }
+
     public void registerUser(String name, String password) {
         if ((name.length() == 0) || (password.length() == 0)) gui.displayMessageAtStart("Username and/or password still empty");
-        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password can't contain space");
+        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password cannot contain space");
+        else if (userList.containsKey(name)) gui.displayMessageAtStart("Userame is already taken");
         else {
             user = new User(name, password);
             gui.showBoardPanel(0);
         }
+    }
+
+    public void login(String name, String password) {
+        if ((name.length() == 0) || (password.length() == 0)) gui.displayMessageAtStart("Username and/or password still empty");
+        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password cannot contain space");
+        else {
+            if (userList.containsKey(name) && userList.get(name).getPassword().equals(password)) {
+                user = userList.get(name);
+                gui.showBoardPanel(0);
+            }
+            else gui.displayMessageAtStart("Username and/or password is wrong");
+        } 
     }
     
     public void boardInput(int row, int col) {

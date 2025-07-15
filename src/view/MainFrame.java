@@ -48,6 +48,13 @@ public class MainFrame {
         frame.setBounds((int)(screenWidth/2.666), (int)(screenHeight/9.6), (int)(screenWidth/4.266), (int)(screenHeight/1.986));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    gameLogic.saveData();
+                    System.exit(0);
+                }
+            });
     }
 
     private void setBoardSize() {
@@ -73,8 +80,8 @@ public class MainFrame {
         return calculatedHeight + (16 - remainder);
     }
 
-    public void startGame() {
-        gameLogic.startGame();
+    public void restartgame() {
+        gameLogic.restartGame();
     }
 
     public void boardInput(int row, int col) {
@@ -164,6 +171,10 @@ public class MainFrame {
 
     public void registerUser(String name, String password) {
         gameLogic.registerUser(name, password);
+    }
+
+    public void login(String name, String password) {
+        gameLogic.login(name, password);
     }
 
     public void displayMessageAtStart(String message) {
