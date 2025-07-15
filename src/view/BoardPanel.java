@@ -21,10 +21,12 @@ public class BoardPanel {
     private JPanel centerBoardPanel;
     private JButton[][] buttons;
 
-    public BoardPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenheight) {
+    public BoardPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenheight, int boardWidth, int boardHeight) {
         this.mainFrame = mainFrame;
         this.screenWidth = screenWidth;
         this.screenHeight = screenheight;
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
         createFonts();
         createImages();
         createBoardPanel();
@@ -53,32 +55,12 @@ public class BoardPanel {
         flag = new ImageIcon(newImage2);
     }
 
-    private int closestFittingWidth() {
-        int calculatedWidth = (int)(screenWidth/4.491);
-        int remainder = calculatedWidth % 16;
-        if (remainder == 0) return calculatedWidth;
-        calculatedWidth = calculatedWidth + (16 - remainder);
-        while ((calculatedWidth + (int)(screenWidth/128)*2) % 5 != 0) {
-            calculatedWidth += 16;
-        }
-        return calculatedWidth;
-    }
-
-    private int closestFittingHeight() {
-        int calculatedHeight = (int)(screenHeight/2.322);
-        int remainder = calculatedHeight % 16;
-        if (remainder == 0) return calculatedHeight;
-        return calculatedHeight + (16 - remainder);
-    }
-
     private void createBoardPanel() {
         boardPanel = new JPanel();
         boardPanel.setLayout(new BorderLayout());
         boardPanel.setBackground(Color.gray);
         centerBoardPanel = new JPanel();
         centerBoardPanel.setLayout(new GridLayout(16, 16));
-        boardWidth = closestFittingWidth();
-        boardHeight = closestFittingHeight();
         centerBoardPanel.setPreferredSize(new Dimension(boardWidth, boardHeight));
         boardPanel.setPreferredSize(new Dimension(boardWidth + (int)(screenWidth/128)*2, boardHeight + (int)(screenHeight/72)*2));
         centerBoardPanel.setBackground(Color.gray);

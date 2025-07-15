@@ -148,19 +148,15 @@ public class GameLogic {
         gui.resetBoard();
         createBoard();
         gui.updateNumOfMines(numOfMines);
-        user = new User("Hello", 1234);
     }
 
-    public void restartGame() {
-        clicked = 0;
-        minutes = 0;
-        if (timer != null) {
-            timer.interrupt();
+    public void registerUser(String name, String password) {
+        if ((name.length() == 0) || (password.length() == 0)) gui.displayMessageAtStart("Username and/or password still empty");
+        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password can't contain space");
+        else {
+            user = new User(name, password);
+            gui.showBoardPanel(0);
         }
-        gui.updateTime("00:00");
-        gui.resetBoard();
-        createBoard();
-        gui.updateNumOfMines(numOfMines);
     }
     
     public void boardInput(int row, int col) {
@@ -210,24 +206,29 @@ public class GameLogic {
         if ((seconds == 60) && (minutes >= 9)) {
             minutes++;
             gui.updateTime(minutes + ":00");
+            this.seconds = 0;
         }
         else if (seconds == 60) {
             minutes++;
             gui.updateTime("0" + minutes + ":00");
+            this.seconds = 0;
         }
         else if ((seconds >= 10) && (minutes >= 10)) {
             gui.updateTime(minutes + ":" + seconds);
+            this.seconds = seconds;
         }
         else if (seconds >= 10) {
             gui.updateTime("0" + minutes + ":" + seconds);
+            this.seconds = seconds;
         }
         else if ((seconds < 10) && (minutes >= 10)) {
             gui.updateTime(minutes + ":0" + seconds);
+            this.seconds = seconds;
         }
         else if (seconds < 10) {
             gui.updateTime("0" + minutes + ":0" + seconds);
+            this.seconds = seconds;
         }
-        this.seconds = seconds;
     }
 
     public void updateStats() {

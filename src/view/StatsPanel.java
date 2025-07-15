@@ -11,6 +11,8 @@ public class StatsPanel {
     private MainFrame mainFrame;
     private int screenWidth;
     private int screenHeight;
+    private int boardWidth;
+    private int boardHeight;
     private JPanel statsPanel;
     private JPanel centerStatsPanel;
     private Font customFont;
@@ -21,10 +23,12 @@ public class StatsPanel {
     private JButton backButton;
     private ImageIcon checkmark;
     
-    public StatsPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenHeight) {
+    public StatsPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenHeight, int boardWidth, int boardHeight) {
         this.mainFrame = mainFrame;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
         createFonts();
         createImages();
         createStatsPanel();
@@ -62,8 +66,8 @@ public class StatsPanel {
         statsPanel.setBackground(Color.gray);
         centerStatsPanel = new JPanel();
         centerStatsPanel.setLayout(null);
-        centerStatsPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth(), mainFrame.getBoardHeight())); 
-        statsPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth() + (int)(screenWidth/128)*2, mainFrame.getBoardHeight() + (int)(screenHeight/72)*2));
+        centerStatsPanel.setPreferredSize(new Dimension(boardWidth, boardHeight)); 
+        statsPanel.setPreferredSize(new Dimension(boardWidth + (int)(screenWidth/128)*2, boardHeight + (int)(screenHeight/72)*2));
         centerStatsPanel.setBackground(Color.gray);
         statsPanel.add(centerStatsPanel, BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
@@ -97,19 +101,19 @@ public class StatsPanel {
     private void createLabels() {
         gamesPlayedLabel = new JLabel();
         gamesPlayedLabel.setForeground(Color.black);
-        gamesPlayedLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/72), mainFrame.getBoardWidth() - (int)(screenWidth/64), (int)(screenHeight/14.4));
+        gamesPlayedLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/72), boardWidth - (int)(screenWidth/64), (int)(screenHeight/14.4));
         gamesPlayedLabel.setHorizontalAlignment(JLabel.CENTER);
         gamesWonLabel = new JLabel();
         gamesWonLabel.setForeground(Color.black);
-        gamesWonLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/10.285), mainFrame.getBoardWidth() - (int)(screenWidth/64), (int)(screenHeight/14.4));
+        gamesWonLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/10.285), boardWidth - (int)(screenWidth/64), (int)(screenHeight/14.4));
         gamesWonLabel.setHorizontalAlignment(JLabel.CENTER);
         winRatioLabel = new JLabel();
         winRatioLabel.setForeground(Color.black);
-        winRatioLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/5.538), mainFrame.getBoardWidth() - (int)(screenWidth/64), (int)(screenHeight/14.4));
+        winRatioLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/5.538), boardWidth - (int)(screenWidth/64), (int)(screenHeight/14.4));
         winRatioLabel.setHorizontalAlignment(JLabel.CENTER);
         bestTimeLabel = new JLabel();
         bestTimeLabel.setForeground(Color.black);
-        bestTimeLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/3.789), mainFrame.getBoardWidth() - (int)(screenWidth/64), (int)(screenHeight/14.4));
+        bestTimeLabel.setBounds((int)(screenWidth/128), (int)(screenHeight/3.789), boardWidth - (int)(screenWidth/64), (int)(screenHeight/14.4));
         bestTimeLabel.setHorizontalAlignment(JLabel.CENTER);
         gamesPlayedLabel.setFont(customFont);
         gamesWonLabel.setFont(customFont);
@@ -122,8 +126,8 @@ public class StatsPanel {
         backButton.setBackground(Color.gray);
         backButton.setBorder(BorderFactory.createBevelBorder(0));
         backButton.setFocusPainted(false);
-        backButton.setBounds(mainFrame.getBoardWidth()/2 - ((int)(screenWidth/17.066))/2, (int)(screenHeight/2.823), (int)(screenWidth/17.066), (int)(screenHeight/19.2));
-        backButton.addActionListener(e -> mainFrame.reShowSettingsPanel());
+        backButton.setBounds(boardWidth/2 - ((int)(screenWidth/17.066))/2, (int)(screenHeight/2.769), (int)(screenWidth/17.066), (int)(screenHeight/19.2));
+        backButton.addActionListener(e -> mainFrame.showSettingsPanel(3));
     }
 
     public void updateGamesPlayed(int gamesPlayed) {

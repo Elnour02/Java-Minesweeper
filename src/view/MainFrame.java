@@ -10,10 +10,13 @@ public class MainFrame {
     private GameLogic gameLogic;
     private int screenWidth;
     private int screenHeight;
+    private int boardWidth;
+    private int boardHeight;
     private JFrame frame;
     private UpperPanel upperPanel;
     private BoardPanel boardPanel;
     private SettingsPanel settingsPanel;
+    private StartPanel startPanel;
     private StatsPanel statsPanel;
     private JPanel centerPanel;
 
@@ -27,11 +30,13 @@ public class MainFrame {
 
     private void createGUI() {
         createFrame();
+        setBoardSize();
         centerPanel = new JPanel(new CardLayout());
-        boardPanel = new BoardPanel(this, centerPanel, screenWidth, screenHeight);
-        upperPanel = new UpperPanel(this, frame, screenWidth, screenHeight);
-        settingsPanel = new SettingsPanel(this, centerPanel, screenWidth, screenHeight);
-        statsPanel = new StatsPanel(this, centerPanel, screenWidth, screenHeight);
+        upperPanel = new UpperPanel(this, frame, screenWidth, screenHeight, boardWidth);
+        startPanel = new StartPanel(this, centerPanel, screenWidth, screenHeight, boardWidth, boardHeight);
+        boardPanel = new BoardPanel(this, centerPanel, screenWidth, screenHeight, boardWidth, boardHeight);
+        settingsPanel = new SettingsPanel(this, centerPanel, screenWidth, screenHeight, boardWidth, boardHeight);
+        statsPanel = new StatsPanel(this, centerPanel, screenWidth, screenHeight, boardWidth, boardHeight);
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
@@ -45,12 +50,31 @@ public class MainFrame {
         frame.setResizable(false);
     }
 
-    public void startGame() {
-        gameLogic.startGame();
+    private void setBoardSize() {
+        boardWidth = closestFittingWidth();
+        boardHeight = closestFittingHeight();
     }
 
-    public void restartGame() {
-        gameLogic.restartGame();
+    private int closestFittingWidth() {
+        int calculatedWidth = (int)(screenWidth/4.491);
+        int remainder = calculatedWidth % 16;
+        if (remainder == 0) return calculatedWidth;
+        calculatedWidth = calculatedWidth + (16 - remainder);
+        while ((calculatedWidth + (int)(screenWidth/128)*2) % 5 != 0) {
+            calculatedWidth += 16;
+        }
+        return calculatedWidth;
+    }
+
+    private int closestFittingHeight() {
+        int calculatedHeight = (int)(screenHeight/2.322);
+        int remainder = calculatedHeight % 16;
+        if (remainder == 0) return calculatedHeight;
+        return calculatedHeight + (16 - remainder);
+    }
+
+    public void startGame() {
+        gameLogic.startGame();
     }
 
     public void boardInput(int row, int col) {
@@ -100,35 +124,26 @@ public class MainFrame {
         upperPanel.updateTime(time);
     }
 
-    public int getBoardWidth() {
-        return boardPanel.getBoardWidth();
-    }
-
-    public int getBoardHeight() {
-        return boardPanel.getBoardHeight();
-    }
-
-    public void showSettingsPanel() {
+    public void showSettingsPanel(int origin) {
         CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
-        cardLayout.next(centerPanel);
-        upperPanel.disableButtons();
+        if (origin == 1) {
+            cardLayout.next(centerPanel);
+            upperPanel.disableButtons();
+        }
+        else cardLayout.previous(centerPanel);
     }
 
-    public void showBoardPanel() {
+    public void showBoardPanel(int origin) {
         CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
-        cardLayout.previous(centerPanel);
         upperPanel.enableButtons();
+        if (origin == 0) cardLayout.next(centerPanel);
+        else cardLayout.previous(centerPanel);
     }
 
     public void showStatsPanel() {
         gameLogic.updateStats();
         CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
         cardLayout.next(centerPanel);
-    }
-
-    public void reShowSettingsPanel() {
-        CardLayout cardLayout = (CardLayout) centerPanel.getLayout();
-        cardLayout.previous(centerPanel);
     }
 
     public void updateGamesPlayed(int gamesPlayed) {
@@ -145,6 +160,14 @@ public class MainFrame {
 
     public void updateBestTime(int bestTimeMinutes, int bestTimeSeconds) {
         statsPanel.updateBestTime(bestTimeMinutes, bestTimeSeconds);
+    }
+
+    public void registerUser(String name, String password) {
+        gameLogic.registerUser(name, password);
+    }
+
+    public void displayMessageAtStart(String message) {
+        startPanel.displayMessage(message);
     }
 
 }

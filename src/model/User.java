@@ -3,14 +3,14 @@ package model;
 public class User {
 
     private String name;
-    private int password;
+    private String password;
     private int gamesPlayed;
     private int gamesWon;
     private int winRatio;
     private int bestTimeMinutes;
     private int bestTimeSeconds;
 
-    public User(String name, int password) {
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
         gamesPlayed = 0;
@@ -24,7 +24,7 @@ public class User {
         return name;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 

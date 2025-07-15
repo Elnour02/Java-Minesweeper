@@ -11,18 +11,24 @@ public class SettingsPanel {
     private MainFrame mainFrame;
     private int screenWidth;
     private int screenHeight;
+    private int boardWidth;
+    private int boardHeight;
     private JPanel settingsPanel;
     private JPanel centerSettingsPanel;
     private Font customFont;
     private ImageIcon checkmark;
+    private ImageIcon user;
+    private ImageIcon stats;
     private JButton userButton;
     private JButton statsButton;
     private JButton backButton;
 
-    public SettingsPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenHeight) {
+    public SettingsPanel(MainFrame mainFrame, JPanel centerPanel, int screenWidth, int screenHeight, int boardWidth, int boardHeight) {
         this.mainFrame = mainFrame;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
         createFonts();
         createImages();
         createSettingsPanel();
@@ -49,6 +55,12 @@ public class SettingsPanel {
         checkmark = new ImageIcon(Paths.get("resources", "images", "checkmark.png").toString());
         Image newImage = checkmark.getImage().getScaledInstance((int)(screenWidth/73.142), (int)(screenHeight/41.142), 4);
         checkmark = new ImageIcon(newImage);
+        user = new ImageIcon(Paths.get("resources", "images", "user.png").toString());
+        Image newImage2 = user.getImage().getScaledInstance((int)(screenWidth/64), (int)(screenHeight/36), 4);
+        user = new ImageIcon(newImage2);
+        stats = new ImageIcon(Paths.get("resources", "images", "stats.png").toString());
+        Image newImage3 = stats.getImage().getScaledInstance((int)(screenWidth/46.545), (int)(screenHeight/26.181), 4);
+        stats = new ImageIcon(newImage3);
     }
 
     private void createSettingsPanel() {
@@ -57,8 +69,8 @@ public class SettingsPanel {
         settingsPanel.setBackground(Color.gray);
         centerSettingsPanel = new JPanel();
         centerSettingsPanel.setLayout(null);
-        centerSettingsPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth(), mainFrame.getBoardHeight())); 
-        settingsPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth() + (int)(screenWidth/128)*2, mainFrame.getBoardHeight() + (int)(screenHeight/72)*2));
+        centerSettingsPanel.setPreferredSize(new Dimension(boardWidth, boardHeight)); 
+        settingsPanel.setPreferredSize(new Dimension(boardWidth + (int)(screenWidth/128)*2, boardHeight + (int)(screenHeight/72)*2));
         centerSettingsPanel.setBackground(Color.gray);
         settingsPanel.add(centerSettingsPanel, BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
@@ -90,27 +102,27 @@ public class SettingsPanel {
     }
 
     private void createButtons() {
-        userButton = new JButton("User");
+        userButton = new JButton("          User", user);
         userButton.setBackground(Color.gray);
         userButton.setBorder(BorderFactory.createBevelBorder(0));
         userButton.setFont(customFont);
         userButton.setForeground(Color.black);
         userButton.setFocusPainted(false);
-        userButton.setBounds((int)(screenWidth/34.133), (int)(screenHeight/72), mainFrame.getBoardWidth() - (int)(screenWidth/17.066), (int)(screenHeight/14.4));
-        statsButton = new JButton("Stats");
+        userButton.setBounds((int)(screenWidth/30.117), (int)(screenHeight/72), boardWidth - (int)(screenWidth/15.058), (int)(screenHeight/14.4));
+        statsButton = new JButton("          Stats", stats);
         statsButton.setBackground(Color.gray);
         statsButton.setBorder(BorderFactory.createBevelBorder(0));
         statsButton.setFont(customFont);
         statsButton.setForeground(Color.black);
         statsButton.setFocusPainted(false);
-        statsButton.setBounds((int)(screenWidth/34.133), (int)(screenHeight/10.285), mainFrame.getBoardWidth() - (int)(screenWidth/17.066), (int)(screenHeight/14.4));
+        statsButton.setBounds((int)(screenWidth/30.117), (int)(screenHeight/10.285), boardWidth - (int)(screenWidth/15.058), (int)(screenHeight/14.4));
         statsButton.addActionListener(e -> mainFrame.showStatsPanel());
         backButton = new JButton(checkmark);
         backButton.setBackground(Color.gray);
         backButton.setBorder(BorderFactory.createBevelBorder(0));
         backButton.setFocusPainted(false);
-        backButton.setBounds(mainFrame.getBoardWidth()/2 - ((int)(screenWidth/17.066))/2, (int)(screenHeight/2.823), (int)(screenWidth/17.066), (int)(screenHeight/19.2));
-        backButton.addActionListener(e -> mainFrame.showBoardPanel());
+        backButton.setBounds(boardWidth/2 - ((int)(screenWidth/17.066))/2, (int)(screenHeight/2.769), (int)(screenWidth/17.066), (int)(screenHeight/19.2));
+        backButton.addActionListener(e -> mainFrame.showBoardPanel(2));
     }
     
 }

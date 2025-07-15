@@ -12,6 +12,7 @@ public class UpperPanel {
     private MainFrame mainFrame;
     private int screenWidth;
     private int screenHeight;
+    private int boardWidth;
     private Font customFont;
     private ImageIcon smiley;
     private ImageIcon settings;
@@ -22,10 +23,11 @@ public class UpperPanel {
     private JButton emptyLeftButton;
     private JButton newGameButton;
     
-    public UpperPanel(MainFrame mainFrame, JFrame frame, int screenWidth, int screenHeight) {
+    public UpperPanel(MainFrame mainFrame, JFrame frame, int screenWidth, int screenHeight, int boardWidth) {
         this.mainFrame = mainFrame;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.boardWidth = boardWidth;
         createFonts();
         createImages();
         createUpperPanel();
@@ -64,7 +66,7 @@ public class UpperPanel {
         upperPanel = new JPanel();
         upperPanel.setBackground(Color.gray);
         upperPanel.setLayout(new GridLayout());
-        upperPanel.setPreferredSize(new Dimension(mainFrame.getBoardWidth() + (int)(screenWidth/170.666)*2, (int)(screenHeight/20.571)));
+        upperPanel.setPreferredSize(new Dimension(boardWidth + (int)(screenWidth/170.666)*2, (int)(screenHeight/20.571)));
     }
 
     private void createLabels() {
@@ -85,19 +87,14 @@ public class UpperPanel {
 
     private void createButtons() {
         newGameButton = new JButton(smiley);
-        newGameButton.setBackground(Color.gray);
-        newGameButton.setBorder(BorderFactory.createBevelBorder(0));
         newGameButton.setFocusPainted(false);
-        newGameButton.addActionListener(e -> mainFrame.restartGame());
         emptyLeftButton = new JButton();
         emptyLeftButton.setBackground(Color.gray);
         emptyLeftButton.setBorder(BorderFactory.createBevelBorder(0));
         emptyLeftButton.setEnabled(false);
         settingsButton = new JButton(settings);
-        settingsButton.setBackground(Color.gray);
-        settingsButton.setBorder(BorderFactory.createBevelBorder(0));
         settingsButton.setFocusPainted(false);
-        settingsButton.addActionListener(e -> mainFrame.showSettingsPanel());
+        disableButtons();
     }
 
     public void updateNumOfMines(int numOfMines) {
@@ -132,11 +129,11 @@ public class UpperPanel {
         newGameButton.setBorder(BorderFactory.createBevelBorder(0));
         newGameButton.setBackground(Color.gray);
         newGameButton.setModel(new DefaultButtonModel());
-        newGameButton.addActionListener(e -> mainFrame.restartGame());
+        newGameButton.addActionListener(e -> mainFrame.startGame());
         settingsButton.setBorder(BorderFactory.createBevelBorder(0));
         settingsButton.setBackground(Color.gray);
         settingsButton.setModel(new DefaultButtonModel());
-        settingsButton.addActionListener(e -> mainFrame.showSettingsPanel());
+        settingsButton.addActionListener(e -> mainFrame.showSettingsPanel(1));
     }
 
 }
