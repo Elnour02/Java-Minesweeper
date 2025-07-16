@@ -98,6 +98,7 @@ public class GameLogic {
                 user.increaseGamesWon();
                 user.updateWinRatio();
                 user.updateBestTime(minutes, seconds);
+                saveData();
             }
         } 
         else {
@@ -165,11 +166,9 @@ public class GameLogic {
     }
 
     public void saveData() {
-        if (user != null) {
-            if (userList.containsKey(user.getName())) userList.replace(user.getName(), userList.get(user.getName()), user);
-            else userList.put(user.getName(), user);
-        }
-        if (userList.size() != 0) dataHandler.writeData(userList);
+        if (userList.containsKey(user.getName())) userList.replace(user.getName(), userList.get(user.getName()), user);
+        else userList.put(user.getName(), user);
+        dataHandler.writeData(userList);
     }
 
     public void registerUser(String name, String password) {
@@ -179,6 +178,7 @@ public class GameLogic {
         else {
             user = new User(name, password);
             gui.showBoardPanel(0);
+            saveData();
         }
     }
 
@@ -213,6 +213,7 @@ public class GameLogic {
                 revealMines(row, col);
                 user.increaseGamesPlayed();
                 user.updateWinRatio();
+                saveData();
             }
             else {
                 checkSurrounding(row, col);

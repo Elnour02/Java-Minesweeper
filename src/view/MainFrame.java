@@ -48,13 +48,6 @@ public class MainFrame {
         frame.setBounds((int)(screenWidth/2.666), (int)(screenHeight/9.6), (int)(screenWidth/4.266), (int)(screenHeight/1.986));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                    gameLogic.saveData();
-                    System.exit(0);
-                }
-            });
     }
 
     private void setBoardSize() {
