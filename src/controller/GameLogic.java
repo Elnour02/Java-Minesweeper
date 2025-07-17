@@ -173,7 +173,7 @@ public class GameLogic {
 
     public void registerUser(String name, String password) {
         if ((name.length() == 0) || (password.length() == 0)) gui.displayMessageAtStart("Username and/or password still empty");
-        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password cannot contain space");
+        else if ((name.indexOf(" ") != -1) || (password.indexOf(" ") != -1)) gui.displayMessageAtStart("Username and/or password cannot contain space");
         else if (userList.containsKey(name)) gui.displayMessageAtStart("Userame is already taken");
         else {
             user = new User(name, password);
@@ -184,7 +184,7 @@ public class GameLogic {
 
     public void login(String name, String password) {
         if ((name.length() == 0) || (password.length() == 0)) gui.displayMessageAtStart("Username and/or password still empty");
-        else if (password.indexOf(" ") != -1) gui.displayMessageAtStart("Password cannot contain space");
+        else if ((name.indexOf(" ") != -1) || (password.indexOf(" ") != -1)) gui.displayMessageAtStart("Username and/or password cannot contain space");
         else {
             if (userList.containsKey(name) && userList.get(name).getPassword().equals(password)) {
                 user = userList.get(name);
